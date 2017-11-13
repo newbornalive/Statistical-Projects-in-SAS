@@ -1,0 +1,185 @@
+libname chap1  'E:\STAT6863 Advanced SAS\Chapter 1';
+proc print data=chap1.burns (obs=10);
+title 'here is burns';
+run;
+proc sql;
+ select a.racec,
+        sum(a.INH_INJ) as tot_inh_inj,
+        sum(a.flame)     as tot_flame,
+		mean(a.TBSA)   as mn_tbsa,
+		mean(a.age) as mn_age
+  from chap1.burns      a
+  group by  a.racec
+;
+  quit;
+run;
+/*Appendix 2*/
+ proc sql feedback;
+ title 'here is calculated';
+ select a.*,
+  a.age*a.tbsa as newdata
+from chap1.burns  a
+where calculated newdata > 5000
+order by a.id
+;
+quit;
+/*Appendix 3*/
+/*inner join*/
+proc sql feedback;
+create table inner_join as
+ select a.*,
+        b.*
+from chap1.burns  a,
+     chap1.myopia b
+where a.id = b.id
+order by a.id
+;
+quit;
+
+proc contents data=inner_join;
+ title 'inner_join';
+
+proc print data=inner_join (obs=15);
+title 'inner join for burns and myopia';
+run;
+/*full outer join*/
+proc sql feedback;
+create table full_join as
+ select a.* ,
+        b.*
+from chap1.burns  a
+     full join
+     chap1.myopia b
+     on a.id = b.id
+;
+quit;
+proc print data=full_join (obs=15);
+title 'full join for burns and myopia';
+run;
+
+/*left outer join */
+proc sql feedback;
+create table left_join as
+ select a.id, a.death, a.age ,
+        b.*
+from chap1.burns  a
+     left join
+     chap1.myopia b
+     on a.id = b.id
+;
+quit;
+
+run;
+proc print data=left_join (obs=15);
+title 'left outer join for burns and myopia';
+run;
+/*right outer join */
+proc sql feedback;
+create table right_join as
+ select a.id, a.death, a.age ,
+        b.*
+from chap1.burns  a
+     right join
+     chap1.myopia b
+     on a.id = b.id
+;
+quit;
+
+run;
+proc print data=right_join (obs=15);
+title 'right outer join for burns and myopia';
+run;
+/*Appendix 4*/
+libname chap23  'E:\STAT6863 Advanced SAS\Chapter 23';
+data whas500;
+set chap23.whas500;
+run;
+proc univariate data=whas500;
+var bmi;
+run;
+proc sql;
+update whas500
+set =salary*
+case when substr(jobcode,3,1)="1"
+then 1.05
+when substr(jobcode,3,1)="2"
+then 1.10
+when substr(jobcode,3,1)="3"
+then 1.15
+else 1.08
+end;
+quit; 
+/*Appendix 5*/
+/*Appendix 6*/
+proc 
+/*Appendix 7*/
+libname sasuser 'E:\STAT6863 Advanced SAS\Data';
+%macro attend(crs=,start=,stop=);
+%let start=%upcase(&start);
+%let stop=%upcase(&stop);
+proc freq data=sasuser.all;
+where begin_date between "&start"d and "&stop"d;
+table location / nocum;
+title "Enrollment from &start to &stop";
+
+%if &crs= %then %do;  **if crs is missing;
+
+title2 "for all Courses";
+%end;
+%else %do;
+title2 "for Course &crs only";
+where also course_code="&crs";
+%end;
+run;
+%mend attend;
+
+run;
+
+
+%attend(crs=C003,start=01jan2001,stop=31dec2001);
+
+run;
+
+
+/*Appendix 8*/
+data big_data;                                                                                                                                                
+     do i= 1 to 1000000;                                                                                                                                       
+                                                                                                                                                               
+      death = 0;                                                                                                                                               
+      smoke  = 0;                                                                                                                                              
+      drug = 0;                                                                                                                                                
+      exercise = 1;                                                                                                                                            
+      random = ranuni(11);                                                                                                                                     
+     **put 'random = ' random;                                                                                                                                 
+       if random <= .1 then do;                                                                                                                                
+          death = 1;                                                                                                                                           
+       end;                                                                                                                                                    
+       if (random <= .07 ) then do;                                                                                                                            
+          smoke = 1;                                                                                                                                           
+       end;                                                                                                                                                    
+       if (random <= .075) then do;                                                                                                                            
+          drug = 1;                                                                                                                                            
+       end;                                                                                                                                                    
+       if (random <= .05 ) then do;                                                                                                                            
+          exercise = 0;                                                                                                                                        
+       end;                                                                                                                                                    
+                                                                                                                                                               
+      random2 = ranuni(19);                                                                                                                                    
+       if random2 < .15 then smoke = 1;                                                                                                                        
+       if random2 < .25 then drug = 1;                                                                                                                         
+       if random2 > .75 then exercise =0;                                                                                                                      
+                                                                                                                                                               
+       weight = round(200 - ranuni(7)*10);                                                                                                                     
+       weight = max(weight, 100);                                                                                                                              
+       height = round(72 - ranuni(5)*10);                                                                                                                      
+     id = i;                                                                                                                                                   
+ output;                                                                                                                                                       
+   end;                                                                                                                                                        
+                                                                                                                                                               
+                                                                                                                                                               
+run;                                                                                                                                                           
+
+
+
+
+
