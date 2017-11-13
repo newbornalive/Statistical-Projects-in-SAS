@@ -1,0 +1,256 @@
+* This file provides example code and a template for Group
+  Presentation 1 in CSUEB STAT 6250-01 during Spring 2015;
+
+* To use this template for a class presentation, your
+  group should perform the following seven steps:
+
+  (1) Create a new SAS code file containing everything in
+      this file starting at the "START HERE" point,
+  (2) name your new SAS code file using the format
+      "stat6250-01_s15-presentation1-group_?_code.sas"
+      but with your group number in place of the "?",
+  (3) if your code also relies on an external data file,
+      then name your data file using the same format but
+      with the appropriately modified file extension to
+      reflect the format of the data file and include
+      full setup/usage instructions for the data file,
+  (4) collaboratively modify all code and comments to fit
+      your group's chosen data set and analysis plan,
+  (5) delete all example code segments and comments that
+      will be not part of your presentation,
+  (6) format your code and comments so that the number of
+      characters per line does not exceed the width of
+      the "START HERE" line below (except possibly in any
+      inline data), and
+  (7) update the comments for each section to reflect the
+      person in your group who will be presenting it.
+
+  Your group leader should then email the resulting SAS
+  code file to Isaiah.Lankham@csueastbay.edu by 7 PM on
+  the day you will be presenting for posting to BB.
+;
+
+*********************** START HERE ***********************;
+
+* Document Overview: The code below implements an example
+  analysis plan applied to data collected from CSUEB STAT
+  6250-01 students during Spring 2015.
+;
+*Data Source & Usage Conventions:
+Because there are only 50 observations within the dataset, it's embedded in a
+  cards/datalines statement below, which allows this
+  source code to be used without an additional data file.
+;
+
+
+* Analysis Plan Step 1: Create SAS dataset
+
+  Presenter: Erica Yang
+  Presenter Email: yun.yang@csueastbay.edu
+
+  Step 1a: Create a SAS dataset in the Work library
+  containing 50 rows of raw student data that are read
+  in as character values into standard-width buffers.
+
+  Step Rationale: This creates a reference data set
+  with no lost formatting.
+
+  SAS Usage Notes: The "infile datalines" option allows
+  the "dsd" option to be used to read comma-separated
+  values from in-line data. Also, all variables being
+  read are first created with desired length attributes
+  using a "length" statement before values are read from
+  the in-line data using an "input" statement.
+; 
+
+data best100_raw;
+    infile datalines dsd;
+    length
+			ID			$30.
+            Rank 		$30.
+            Company     $30.
+            Employees   $30.
+            Industry    $30.
+			Ownership	$30.
+            State       $30.
+            Years      	$30.
+            Founding    $30.
+			Revenue		$30.
+            Added    	$30.
+			Openings	$30.
+			Applicants	$30.
+	;
+	input
+			ID			$
+            Rank 		$
+            Company     $
+            Employees   $
+            Industry    $
+			Ownership	$
+            State       $
+            Years      	$
+			Founding    $
+			Revenue		$
+            Added    	$
+			Openings	$
+			Applicants	$
+	;
+
+datalines;
+55881,1,"Google, Inc.",28633,Information Technology,Public,California,9,1998,55.5,4514,2500,140
+53692,2,"The Boston Consulting Group, Inc.",2701,Professional Services,Private,Massachusetts,10,1963,3.9,151,1000,62
+88399,3,ACUITY,1039,Financial Services & Insurance,Private,Wisconsin,0,1925,1.1,129,150,33
+53150,4,"SAS Institute, Inc.",6647,Information Technology,Private,North Carolina,18,1976,3.1,193,350,43
+27367,5,Robert W. Baird & Co.,2822,Financial Services & Insurance,Private,Wisconsin,12,1919,1.1,121,98,100
+96211,6,Edward Jones,37164,Financial Services & Insurance,Private,Missouri,16,1922,5.7,-263,4874,26
+86648,7,"Wegmans Food Markets, Inc.",43211,Retail,Private,New York,18,1916,7.1,182,1900,17
+75661,8,salesforce.com,10146,Information Technology,Public,California,7,1999,5.4,3284,946,110
+16935,9,Genentech,12895,Biotechnology & Pharmaceuticals,Private,California,17,1976,16.3,885,993,64
+68721,10,Camden Property Trust,1746,Construction & Real Estate,Public,Texas,8,1982,0.813,-73,72,43
+94659,11,Kimpton Hotels & Restaurants,8116,Hospitality,Private,California,6,1981,1,50,445,150
+88028,12,"Quicken Loans, Inc.",9010,Financial Services & Insurance,Private,Michigan,12,1985,3.6,604,600,
+70369,13,Riot Games,1052,Media,Private,California,0,2006,1,259,490,101
+78175,14,David Weekley Homes,1133,Construction & Real Estate,Private,Texas,9,1976,1.1,191,89,
+75762,15,Burns & McDonnell,4498,Engineering,Private,Missouri,5,1898,1.9,680,746,70
+55801,16,"CHG Healthcare Services, Inc.",1783,Professional Services,Private,Utah,6,1979,0.849,172,49,31
+34005,17,"W. L. Gore & Associates, Inc.",6453,Manufacturing & Production,Private,Delaware,18,1958,3.1,141,,77
+26725,18,NuStar Energy,1210,Transportation,Public,Texas,7,2001,3.5,-29,50,52
+32200,19,Stryker Corporation,12277,Manufacturing & Production,Public,Michigan,5,1941,9.7,1202,561,71
+51298,20,Hilcorp,1170,Manufacturing & Production,Private,Texas,3,1989,0.9,64,32,5
+41002,21,Ultimate Software,2049,Information Technology,Public,Florida,4,1990,0.506,423,200,57
+26392,22,"Workday, Inc.",3100,Information Technology,Public,California,0,2005,0.469,885,,700
+49596,23,Baptist Health South Florida,14156,Health Care,Non-profit,Florida,15,1960,2.2,156,819,39
+90054,24,"Twitter, Inc.",2730,Information Technology,Public,California,0,2006,1.4,950,643,230
+88004,25,"Kimley-Horn and Associates, Inc.",2001,Professional Services,Private,North Carolina,8,1967,0.435,431,207,155
+34774,26,Nugget Market,1213,Retail,Private,California,10,1926,0.275,7,22,
+40877,27,The Container Store,4240,Retail,Public,Texas,16,1978,0.749,199,294,118
+22091,28,"World Wide Technology, Inc.",2414,Information Technology,Private,Missouri,4,1990,6.4,361,185,24
+77683,29,"Plante & Moran, PLLC",1935,Professional Services,Private,Michigan,17,1924,0.404,65,110,48
+70686,30,Baker Donelson,1289,Professional Services,Private,Tennessee,6,1888,0.297,43,10,91
+82410,31,"Intuit, Inc.",7372,Information Technology,Public,California,14,1983,4.2,-355,1212,41
+82433,32,St. Jude Children's Research Hospital,3951,Health Care,Non-profit,Tennessee,5,1962,0.696,117,142,152
+89631,33,USAA,26267,Financial Services & Insurance,Private,Texas,10,1922,21,1206,1100,56
+31030,34,"JM Family Enterprises, Inc.",3771,Manufacturing & Production,Private,Florida,17,1968,12.5,81,100,41
+48571,35,NetApp,7459,Information Technology,Public,California,13,1992,6.3,-516,700,35
+30395,36,"ARI, Automotive Resources International",1455,Professional Services,Private,New Jersey,3,1948,1.6,23,50,102
+20964,37,Credit Acceptance Corporation,1334,Financial Services & Insurance,Public,Michigan,2,1972,0.682,69,69,39
+94356,38,Devon Energy,3818,Manufacturing & Production,Public,Oklahoma,8,1971,10.4,243,256,50
+26048,39,Atlantic Health System,10312,Health Care,Non-profit,New Jersey,7,1996,1.6,1218,593,40
+87917,40,O.C. Tanner Company,1354,Professional Services,Private,Utah,0,1927,0.439,-126,30,23
+48412,41,Alston & Bird,1597,Professional Services,Private,Georgia,16,1893,0.675,-46,33,400
+11252,42,Cooley LLP,1654,Professional Services,Private,California,2,1920,0.674,140,68,22
+51826,43,"TEKsystems, Inc.",3607,Professional Services,Private,Maryland,3,1997,3.6,130,1100,4
+77009,44,Southern Ohio Medical Center,2357,Health Care,Non-profit,Ohio,8,1907,0.74,63,71,66
+19005,45,OhioHealth,16385,Health Care,Non-profit,Ohio,9,1997,2.5,1038,1095,2534
+64773,46,Perkins Coie LLP,1626,Professional Services,Private,Washington,13,1912,0.635,69,84,47
+66344,47,Four Seasons Hotels & Resorts,13071,Hospitality,Private,Washington,18,1960,4,264,621,10
+71710,48,"FactSet Research Systems, Inc.",1997,Financial Services & Insurance,Public,Connecticut,7,1978,0.858,139,226,57
+68864,49,Aflac,4728,Financial Services & Insurance,Public,Georgia,17,1955,24,31,139,53
+74754,50,"The Goldman Sachs Group, Inc.",13802,Financial Services & Insurance,Public,New York,18,1869,34.2,,2000,
+61755,51,American Express,62800,Financial Services & Insurance,Public,New York,15,1850,33,,1185,
+53945,52,"Autodesk, Inc.",3209,Information Technology,Public,California,7,1982,2.3,82,527,44
+59721,53,"Marriott International, Inc.",102868,Hospitality,Public,Maryland,18,1927,12.8,-3955,5412,50
+27679,54,QuikTrip,16864,Retail,Private,Oklahoma,13,1958,12.5,942,429,36
+38646,55,Whole Foods Market,76726,Retail,Public,Texas,18,1980,12.9,1410,1804,75
+66182,56,"L.L.Bean, Inc.",4966,Retail,Private,Maine,3,1912,1.6,54,50,62
+71173,57,Houston Methodist,15592,Health Care,Non-Profit,Texas,10,1919,2.6,1706,1807,10
+95859,58,"Recreational Equipment, Inc. (REI)",10440,Retail,Cooperative,Washington,18,1938,2,381,1379,43
+12007,59,Build-A-Bear Workshop,3273,Retail,Public,Missouri,7,1997,0.379,-34,29,30
+71640,60,Scripps Health,12796,Health Care,Non-profit,California,8,1924,2.6,15,690,24
+28981,61,Children's Healthcare of Atlanta,7559,Health Care,Non-profit,Georgia,10,1998,2.6,325,500,40
+39682,62,"CustomInk, LLC",1113,Retail,Private,Virginia,0,2000,0.2,321,88,35
+23770,63,"KPMG, LLP",24422,Professional Services,Partnership,New York,8,1897,26.5,2837,7200,88
+19399,64,"CarMax, Inc.",19914,Retail,Public,Virginia,11,1993,12.5,1636,2500,
+12104,65,"VMware, Inc.",7216,Information Technology,Public,California,0,1998,6.4,1461,1200,43
+96731,66,"Novo Nordisk, Inc.",5472,Biotechnology & Pharmaceuticals,Public,New Jersey,7,1982,15.2,549,79,104
+55157,67,PCL Construction,1533,Construction & Real Estate,Private,Colorado,10,1975,7.1,97,84,327
+86607,68,Allianz Life Insurance Company of North America,1689,Financial Services & Insurance,Public,Minnesota,4,1896,9.7,46,75,18
+58040,69,Texas Health Resources,17823,Health Care,Non-Profit,Texas,0,1997,3.8,171,1305,6
+44333,70,"Cisco Systems, Inc.",36463,Information Technology,Public,California,18,1984,48.6,42,41,2640
+60558,71,Cadence,2554,Electronics,Public,California,0,1988,1.46,318,424,11
+56996,72,Navy Federal Credit Union,11186,Financial Services & Insurance,Non-profit,Virginia,5,1933,3.7,1307,843,39
+63937,73,Mayo Clinic,43609,Health Care,Non-profit,Minnesota,12,1919,9.4,-451,1965,
+36585,74,PricewaterhouseCoopers LLP,37503,Professional Services,Private,New York,11,1865,32.1,1325,5571,32
+52197,75,Arnold & Porter LLP,1284,Professional Services,Private,District of Columbia,11,1946,0.686,-93,23,61
+23085,76,"Hyland Software, Inc.",1565,Information Technology,Private,Ohio,2,1991,0.314,80,102,30
+64828,77,Roche Diagnostics,4380,Health Care,Private,Indiana,4,1964,11.3,241,142,55
+83257,78,Hyatt Hotels Corporation,43167,Hospitality,Public,Illinois,2,1957,4.184,522,3925,15
+23097,79,Ernst & Young,31288,Professional Services,Private,New York,17,1894,25.8,1903,1800,26
+14787,80,General Mills,16200,Manufacturing & Production,Public,Minnesota,12,1866,17,96,,
+76969,81,"Publix Super Markets, Inc.",167367,Retail,Private,Florida,18,1930,29.2,2385,4200,
+55964,82,Bright Horizons Family Solutions,16782,Education & Training,Public,Massachusetts,16,1986,1.2,1107,1120,13
+69062,83,TDIndustries,1861,Construction & Real Estate,Private,Texas,18,1946,0.433,72,85,31
+83538,84,Meridian Health,10154,Health Care,Non-Profit,New Jersey,6,1997,1.5,169,700,50
+83256,85,"Mars, Incorporated",11545,Manufacturing & Production,Private,Virginia,3,1911,33,56,590,60
+44957,86,"Zappos.com, Inc. and its Subsidiaries",1441,Retail,Public,Nevada,7,1999,2,32,115,33
+41835,87,WellStar Health System,11889,Health Care,Non-Profit,Georgia,2,1993,1.5,828,781,30
+79703,88,The Cheesecake Factory Incorporated,35140,Hospitality,Public,California,2,1978,1.9,,1750,23
+59130,89,"Hilti, Inc.",2061,Professional Services,Private,Oklahoma,0,1941,4.9,104,,35
+58422,90,Adobe Systems Incorporated,5797,Information Technology,Public,California,15,1982,4.1,-2,1000,42
+75487,91,Capital One Financial Corporation,40568,Financial Services & Insurance,Public,Virginia,9,1994,22.3,588,4962,25
+90006,92,"Ryan, LLC",1407,Professional Services,Private,Texas,0,1991,0.389,78,273,32
+92301,93,"Nordstrom, Inc.",61666,Retail,Public,Washington,18,1901,12.2,1071,6868,12
+39642,94,"Arthrex, Inc.",1895,Manufacturing & Production,Private,Florida,0,1984,1.6,179,213,125
+31339,95,Nationwide Mutual Insurance Company,33672,Financial Services & Insurance,Private,Ohio,0,1926,23.9,455,1366,17
+72161,96,"Activision Blizzard, Inc.",4453,Media,Public,California,0,1979,4.6,114,1150,64
+13223,97,Deloitte,46136,Professional Services,Partnership,New York,16,1895,32.4,195,7800,59
+77139,98,Accenture,39790,Professional Services,Public,New York,7,1989,30,3200,2000,
+80259,99,Regeneron,2536,Biotechnology & Pharmaceuticals,Public,New York,0,1988,2.3,633,360,56
+95900,100,"Protiviti, Inc.",1703,Professional Services,Public,California,0,2002,0.6242,186,540,
+;
+run;
+
+
+
+* Analysis Plan Step 1: Create SAS dataset (cont.)
+
+ 
+  Step 1b: Convert variables intended to contain
+  quantitative into numeric variables, including
+  generating missing values from any non-numeric values.
+
+  Step Rationale: This creates a "cleaned" data set
+  with new numeric variables having proper types and
+  format for analysis as quantitative data fields.
+
+  SAS Usage Notes: A "set" statement is used to read
+  in the raw source dataset, the "input" function is
+  used to attempt to convert character values to
+  numeric values using a specified "informat" for
+  interpreting character values, and a "format"
+  statement is used to specify how values will be
+  displayed for the non-standard numeric variable.
+  Also, the global system option YEARCUTOFF= is set
+  to a value allowing two-digit years to be read in
+  as "reasonable" values.
+; 
+
+data best100;
+	retain ID Rank; *drop and swap;
+	set best100_raw (rename=(ID=temp_ID Rank=temp_Rank Revenue=temp_Revenue)); *rename() is data step option;
+	ID = input(temp_ID,best12.);
+    Rank = input(temp_Rank,best12.);
+    Number_of_Employees = input(Employees,best12.);
+    Years_on_List = input(Years,best12.);
+    Founding_Year = input(Founding,best12.);
+	Revenue = input(temp_Revenue,best12.);
+    Jobs_Added_Last_Year = input(Added,best12.);
+	Job_Openings = input(Openings,best12.);
+	Applicants_per_Opening = input(Applicants,best12.);
+	drop Employees Years Founding Added Openings Applicants temp_ID temp_Rank temp_Revenue;
+run;
+
+proc sort data=work.Best100 out=work.best100_1;
+  by decending Applicants_per_Opening;
+* Frist question I want to ask is which job is the most competitive? and why? 
+  The result is very interesting;
+
+proc print data=work.Best100_1;
+*I couldn't figure out why. Then I figure if I compare the ownership type and state, it maybe explain a bit;
+      where Applicants_per_Opening>100;
+
+Run;
+
+
+
+     
