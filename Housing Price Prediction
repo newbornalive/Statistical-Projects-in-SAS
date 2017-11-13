@@ -1,0 +1,71 @@
+Modeling Home Price for Realtors
+
+1. Data Description and model building
+We are using 522 previously sold houses data to analyze the future housing price. We will model single-family home sale prices range from $84,000 to $920,000, using these predictor variables below:
+	Price: response variable;
+	Sqft : square footage of the house;
+	Bed : number of bedrooms;
+	Bath: number of bathrooms;
+	Bedbath : interaction term between the number of bedrooms and bathrooms;
+	Age: converted from year by the formula age=(2016-year)/10;;
+	Ager: reciprocals of age
+	Ac : air conditioning (indicator) 
+	Pool: indicator
+	Acpool : interaction term between indicator of ac and pool;
+	Cars: number of cars
+	Lot: the size of the property;
+	Quality: 1 for low quality,2 for medium quality,3 for high quality; 
+            converted to 2 indicators: {0 if low quality, 1 if medium or high quality };
+	Qualitypool : interaction term between indicator of quality and pool;
+	Highway: whether the house is next to highway.
+Full model:
+
+   (price) ̂i= 168710+87.88737sqft+5462.04505 bed+22415bath-3625.89730bedbath-	
+               13074age+1354.36586ac+8989.14801 cars-184066pool+172925 acpool 	+1.65678lot
+	             -147720quality+36087qualitypool-29420highway+εi
+  
+By Shapiro-Wilk test, we know our model violated the normality assumption. Reviewing the QQ plot and individual residual plot, we noticed that the data is lightly skewed to the right and the explanatory quantitate variable age seems to be nonlinear. Since sample size is 522, the light skewness has little effect on the linear regression. No transformation needed. 
+         
+However, for age, the residual plot suggests to take reciprocals of age. Replace age in the full model by ager. After transformation, we obtained explanatory variable ager linearity. For normality assumption, we have the same conclusion as earlier.
+                    
+By examining residual plot, we can see a fennel shape (left figure), therefore, constant variance assumption is also violated.  We try to use weight regression model to fix it (right firgure). Compare the two figures, we can see that the improvement is not very significant because the sample size is 522, the power of detecting small violation is very high. Most of our data seem to have equal variance. Therefore, we retain our full model without using weight regression model.
+   
+The final full model is:
+(price) ̂i = 17053+83.18572sqft+8997.00223bed+19613bath-3473.35963bedbath
+             +329333age+3233.10834ac+8059.07767cars-159392pool+174400 acpool 	+1.61144lot -130040quality+15732qualitypool-34709highway+εi
+Use forward model selection method, the regression model will contain 11 explanatory variables, and they are sqft, quality, ager, lot, bed, bath, bedbath, pool, acpool, cars, and highway(R-Square = 0.8376 and C(p) = 10.6345).However, the interaction term bedbath appeared before bath enter the model. Ran a new forward model selection, the result did not include main effect bed. Therefore we cannot use this model selection. Try stepwise model selection method, the regression model will contain 9 explanatory variables, and they are sqft, quality, anger, lot, acpool, pool, bath, cars, and highway(R-Square = 0.8367 and C(p) = 9.6009). Noticed that, the interaction term acpool and appeared before main effect pool appeared, remove this term and do a stepwise model selection again. We ended up 10 explanatory variables. They are sqft, quality, ager, lot, pool, cars, highway, bath, bed, bedbath.
+
+Final regression model:
+(price) ̂i = 4163.82216 + 85.18737sqft + 12724 bed + 24727bath - 5187.97823bedbath + 333609ager + 8807.97378cars + 23271pool + 1.52316lot - 1288511quality - 35359highway + εi
+
+2. Model interpretation and use
+Our final model might be considered quite successful in terms of its ability to usefully explain the variation in home price (R2 = 83.5%), even though more than 16% of the variation in price remains unexplained by the model. We will examine each explanatory variable effect individually.
+The constant intercept term $4163.82216 here is only for model fitting better, can be considered as a starting point. 
+Sqft effect on estimated price:   4163.82216 + 85.18737sqft. The bigger sqft is, the higher home price will be.
+
+Age effect on estimated price:  4163.82216 +333609ager.Interestingly, the age of a house varies inversely to the home price with a constant333609, which means the older a house is, the cheaper it is.
+1) Cars effect on estimated price:   4163.82216 +8807.97378cars. The ability to hold more cars seem to be a good selling point.
+
+2) Pool effect on estimated price: 4163.82216 + 23271pool. Having a pool seems to be a good selling point in this area.
+
+3) Lot effect on estimated price: 4163.82216 + 1.52316lot.  Lot effect is smaller than what we expected. But still, a larger lot will increase the price.
+
+4) Quality effect on estimated price: 4163.82216 - 128851quality. 
+Oddly, the quality feature turned out not to be a beneficial character for the estimated price (estimated parameters is negative), which indicates low quality might help increase home price.
+
+5) Bed and bath effect on estimated price: 
+4163.82216 + 12724 bed + 24727bath - 	5187.97823bedbath
+The interaction term between bed and bath stayed in the model, has a negative coefficient, indicating that if two houses have the same number of bedrooms(less than 5), then whichever has more bathrooms will probably have a higher value. When the number of bedrooms excesses 5, then whichever has less bathroom will have a higher sales price.
+
+6) Highway effect on price: 4163.82216 - 35359highway.
+Highway feature turns out to be a harmful character as we expected (the estimated parameter sing is negative). The houses nearby highway will be listed towards lower price.
+We were expecting ac, ac and pool interaction term, and quality and pool interaction term in the model, however, they are not. 
+A potential use for the final model might be to narrow the range of possible values for the asking price of a home about to be put on the market. 
+Considering a home with the following features: 1950 sqft, 4 bedrooms, 3 bathrooms, with air conditioning, 2 car garage, no pool, built in 1980, medium quality, 25000 sqft lot, not near a highway. A 95% prediction interval ignoring the model comes to ($140968, $363954); and its 95% mean confident interval using model will come to ($243473, $261448).
+ Considering a home with the following features: 3500 sqft, 3 bedrooms, 1 bathroom, no air conditioning, 1 car garage, with pool, built in 1975, low quality, 10000 sqft lot, not near a highway. A 95% prediction interval ignoring the model comes to ($361540, $594,859); and its 95% mean confident interval using model will come to ($442,710, $513,689).
+Since the 95% confident interval is an interval for the mean response, and the 95% prediction interval is for the response of each individual observation, we can see that the 95% prediction interval is wider than the corresponding 95% confidence interval of the prediction because of the added uncertainty involved in predicting an individual response versus the mean response. 
+So, a realtor could advise the house owner to price their home somewhere within the prediction interval range depending on other factors not included in the model, for example if the house is at a good street or within the region of a good school then we can hope to price the house toward the upper end of the prediction interval range. Vice versa. 
+Note that applying the experience of a realtor to the range will often make regression analysis more effective.
+
+	
+
